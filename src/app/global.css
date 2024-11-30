@@ -1,0 +1,13 @@
+@import url(../shared/ui/Container/Container.module.css);
+@import url(../shared/ui/Block/Block.module.css);
+@import url(../shared/ui/Row/Row.module.css);
+
+* {
+  margin: 0;
+  padding: 0;
+  font-family: Roboto, sans-serif;
+}
+
+body {
+  background-color: #f5f5f5;
+}
