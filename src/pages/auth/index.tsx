@@ -9,6 +9,7 @@ import { Row } from "shared/ui/Row";
 import { Button } from "shared/ui/Button";
 import { ThemeSwitch } from "shared/ui/ThemeSwitch";
 import { Input } from "shared/ui/Input";
+import { VscAccount } from "react-icons/vsc";
 
 type User = {
   id: number;
@@ -74,13 +75,12 @@ export const LoginPage = observer(() => {
           </div> */}
           <Input
             id="test"
-            label="Введите имя"
-            placeholder="Введите имя"
-            value="test"
+            label="Введите почту"
+            placeholder="Почту"
             onChange={() => console.log("t")}
           />
         </Row>
-        <Row gapRow="16px" padding="20px 0px 20px 0px">
+        <Row gapRow="16px">
           <Button variant="filled" onClick={() => console.log("TEST")}>
             Отменить
           </Button>

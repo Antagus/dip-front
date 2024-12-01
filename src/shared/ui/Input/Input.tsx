@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import "./Input.module.css"; // Подключите CSS с вышеуказанными стилями
+import styles from "./Input.module.css";
+import { themeStore } from "shared/store";
 
 interface InputProps {
-  id: string;
-  label: string;
-  placeholder: string;
-  value: string;
+  id?: string;
+  label?: string;
+  placeholder?: string;
+  value?: string;
   onChange: (value: string) => void;
   type?: string;
 }
@@ -20,12 +21,32 @@ export const Input: React.FC<InputProps> = ({
 }) => {
   const [isFocused, setIsFocused] = useState(false);
 
+  const themeStyles =
+    themeStore.theme === "dark"
+      ? {
+          "--background-color": "#222",
+          "--text-color": "#fff",
+          "--border-color": "#444",
+          "--focus-color": "#427ba4",
+        }
+      : {
+          "--background-color": "#fff",
+          "--text-color": "#000",
+          "--border-color": "#ccc",
+          "--focus-color": "#0056b3",
+        };
+
   return (
-    <div className="input-container">
+    <div
+      style={themeStyles as React.CSSProperties}
+      className={styles["input-container"]}
+    >
       <input
         id={id}
         type={type}
-        className={`input ${isFocused || value ? "input-focused" : ""}`}
+        className={`${styles.input} ${
+          isFocused || value ? styles["input-focused"] : ""
+        }`}
         placeholder={placeholder}
         value={value}
         onChange={(e) => onChange(e.target.value)}
@@ -34,8 +55,8 @@ export const Input: React.FC<InputProps> = ({
       />
       <label
         htmlFor={id}
-        className={`input-label ${
-          isFocused || value ? "input-label-active" : ""
+        className={`${styles["input-label"]} ${
+          isFocused || value ? styles["input-label-active"] : ""
         }`}
       >
         {label}
