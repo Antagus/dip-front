@@ -1,0 +1,47 @@
+.btn {
+  border-radius: 8px;
+  padding: 16px 1px;
+  border: none;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  cursor: pointer;
+  outline: none;
+  user-select: none;
+
+  /* Плавные переходы */
+  transition: all 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.btn-shadow-dark {
+  box-shadow: 1px 2px 16px rgba(0, 0, 0, 0.45);
+}
+
+.btn-usual {
+  background: #427ba4;
+  color: white;
+}
+
+.btn-filled-lt {
+  background: #d8d8d8;
+}
+
+.btn-filled-dark {
+  background: #333333;
+  color: white;
+}
+
+/* Эффект при наведении */
+.btn:hover {
+  transform: translateY(-2px); /* Поднимаем кнопку */
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.6); /* Усиление тени */
+}
+
+/* Эффект при нажатии */
+.btn:active {
+  transform: scale(0.95); /* Уменьшение кнопки для эффекта нажатия */
+  box-shadow: 0px 2px 12px rgba(0, 0, 0, 0.4); /* Сжатие тени */
+  background: #35688c; /* Темный оттенок основного цвета */
+}

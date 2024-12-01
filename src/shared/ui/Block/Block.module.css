@@ -4,10 +4,12 @@
 
 .dark-block-theme {
   background-color: #1a1a1a;
+  box-shadow: 1px 2px 16px rgba(0, 0, 0, 0.45);
   color: white;
 }
 
 .light-block-theme {
   background-color: #ffffff;
+  box-shadow: 1px 2px 16px rgba(0, 0, 0, 0.15);
   color: black;
 }

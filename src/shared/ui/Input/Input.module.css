@@ -1,0 +1,64 @@
+/* Контейнер для input */
+.input-container {
+  position: relative;
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+/* Сам input */
+.input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid #444; /* Начальная граница */
+  background-color: #222; /* Цвет input */
+  color: #fff; /* Текст белый */
+  font-size: 16px;
+  border-radius: 8px; /* Закругленные углы */
+  outline: none;
+  transition: all 0.3s ease; /* Плавный переход */
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); /* Легкая тень */
+}
+
+/* Стили при фокусе */
+.input:focus {
+  border-color: #427ba4; /* Цвет акцента */
+  box-shadow: 0px 4px 12px rgba(66, 123, 164, 0.5); /* Тень на фокусе */
+  background-color: #333; /* Легкое изменение цвета */
+}
+
+/* Плейсхолдер */
+.input::placeholder {
+  color: #888; /* Темный оттенок текста */
+  opacity: 0.8;
+  transition: all 0.3s ease;
+}
+
+/* Плейсхолдер при фокусе */
+.input:focus::placeholder {
+  opacity: 0.5; /* Уменьшение видимости плейсхолдера при фокусе */
+}
+
+/* Лейбл для input */
+.input-label {
+  position: absolute;
+  top: -8px;
+  left: 16px;
+  font-size: 14px;
+  color: #888;
+  background: #222; /* Совпадает с цветом input */
+  padding: 0 4px;
+  transform: translateY(0);
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+
+/* Скрытие лейбла, если input пуст */
+.input:placeholder-shown + .input-label {
+  opacity: 0;
+  transform: translateY(12px); /* Перемещаем вниз */
+}
+
+/* Лейбл на фокусе */
+.input:focus + .input-label {
+  color: #427ba4; /* Цвет акцента */
+}

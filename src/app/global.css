@@ -1,6 +1,7 @@
 @import url(../shared/ui/Container/Container.module.css);
 @import url(../shared/ui/Block/Block.module.css);
 @import url(../shared/ui/Row/Row.module.css);
+@import url(../shared/ui/Button/Button.module.css);
 
 * {
   margin: 0;

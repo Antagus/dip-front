@@ -1,11 +1,14 @@
 import React from "react";
 
 type Props = {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   tPadding?: string;
   bPadding?: string;
   lPadding?: string;
   rPadding?: string;
+  gapRow?: string;
+  padding?: string;
+  margin?: string;
 } & React.HTMLAttributes<HTMLElement>;
 
 export const Row: React.FC<Props> = ({
@@ -15,6 +18,9 @@ export const Row: React.FC<Props> = ({
   bPadding,
   lPadding,
   rPadding,
+  gapRow = "8px",
+  padding = `${tPadding} ${lPadding} ${bPadding} ${rPadding}`,
+  margin,
   ...props
 }) => {
   return (
@@ -26,6 +32,8 @@ export const Row: React.FC<Props> = ({
         paddingBottom: bPadding,
         paddingLeft: lPadding,
         paddingRight: rPadding,
+        padding: padding,
+        gap: gapRow,
       }}
       {...props}
     >
