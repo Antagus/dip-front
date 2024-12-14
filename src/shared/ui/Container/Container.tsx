@@ -8,7 +8,7 @@ type Props = {
 export const Container: React.FC<Props> = ({
   children,
   style = {},
-  padding = "5px 10px 5px 10px",
+  padding = "0px 0px 0px 0px",
 }) => {
   return (
     <section className="container" style={{ ...style, padding: padding }}>

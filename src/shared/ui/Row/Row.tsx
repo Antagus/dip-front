@@ -14,8 +14,8 @@ type Props = {
 export const Row: React.FC<Props> = ({
   children,
   style = {},
-  tPadding,
-  bPadding,
+  tPadding = "8px",
+  bPadding = "8px",
   lPadding,
   rPadding,
   gapRow = "8px",

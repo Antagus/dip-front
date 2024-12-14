@@ -1,0 +1,57 @@
+/* Фон затемнения */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Затемнение фона */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Поверх всех элементов */
+}
+
+/* Само модальное окно */
+.modal {
+  position: relative;
+  background-color: var(--background-color); /* Цвет в зависимости от темы */
+  color: var(--text-color); /* Текст в зависимости от темы */
+  border-radius: 12px;
+  padding: 20px;
+  width: 100%;
+  max-width: 500px;
+  box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease, bottom 0.3s ease;
+}
+
+/* Стили для мобильного экрана */
+@media (max-width: 600px) {
+  .modal {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 50%; /* Занимает половину экрана */
+    border-radius: 12px 12px 0 0; /* Скругляем только верхние углы */
+    max-width: 100%;
+    box-sizing: border-box;
+    min-height: 420px;
+  }
+}
+
+/* Кнопка закрытия */
+.closeButton {
+  display: flex;
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: var(--text-color);
+  cursor: pointer;
+}
+
+.name-modal {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+}

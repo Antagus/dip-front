@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import styles from "./Input.module.css";
+import styles from "./Input.module.scss";
 import { themeStore } from "shared/store";
+import { observer } from "mobx-react-lite";
 
 interface InputProps {
   id?: string;
@@ -8,59 +9,57 @@ interface InputProps {
   placeholder?: string;
   value?: string;
   onChange: (value: string) => void;
+  onBlur?: () => void;
+  onKeyPress?: (e: React.KeyboardEvent<HTMLInputElement>) => void; // Добавлено onKeyPress
   type?: string;
 }
 
-export const Input: React.FC<InputProps> = ({
-  id,
-  label,
-  placeholder,
-  value,
-  onChange,
-  type = "text",
-}) => {
-  const [isFocused, setIsFocused] = useState(false);
+export const Input: React.FC<InputProps> = observer(
+  ({
+    id,
+    label,
+    placeholder,
+    value = "",
+    onBlur,
+    onChange,
+    onKeyPress,
+    type = "text",
+    ...rest
+  }) => {
+    const [isFocused, setIsFocused] = useState(false);
 
-  const themeStyles =
-    themeStore.theme === "dark"
-      ? {
-          "--background-color": "#222",
-          "--text-color": "#fff",
-          "--border-color": "#444",
-          "--focus-color": "#427ba4",
-        }
-      : {
-          "--background-color": "#fff",
-          "--text-color": "#000",
-          "--border-color": "#ccc",
-          "--focus-color": "#0056b3",
-        };
+    const themeClass = themeStore.theme === "dark" ? styles.dark : styles.light;
 
-  return (
-    <div
-      style={themeStyles as React.CSSProperties}
-      className={styles["input-container"]}
-    >
-      <input
-        id={id}
-        type={type}
-        className={`${styles.input} ${
-          isFocused || value ? styles["input-focused"] : ""
-        }`}
-        placeholder={placeholder}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        onFocus={() => setIsFocused(true)}
-        onBlur={() => setIsFocused(false)}
-      />
-      <label
-        htmlFor={id}
-        className={`${styles["input-label"]} ${
-          isFocused || value ? styles["input-label-active"] : ""
-        }`}
-      >
-        {label}
-      </label>
-    </div>
-  );
-};
+    return (
+      <div className={`${styles.inputContainer} ${themeClass}`}>
+        <input
+          id={id}
+          type={type}
+          className={`${styles.input} ${
+            isFocused || value ? styles.inputFocused : ""
+          }`}
+          placeholder={placeholder}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          onBlur={() => {
+            setIsFocused(false);
+            onBlur && onBlur();
+          }}
+          onFocus={() => setIsFocused(true)}
+          onKeyPress={onKeyPress}
+          {...rest}
+        />
+        {label && (
+          <label
+            htmlFor={id}
+            className={`${styles.inputLabel} ${
+              isFocused || value ? styles.inputLabelActive : ""
+            }`}
+          >
+            {label}
+          </label>
+        )}
+      </div>
+    );
+  }
+);
