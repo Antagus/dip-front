@@ -11,8 +11,8 @@ interface ValidationInputProps {
   value: string;
   onChange: (value: string) => void;
   type?: string;
-  typeValidation: ValidationType; // Тип валидации
-  errorMessage?: string; // Кастомное сообщение об ошибке
+  typeValidation: ValidationType;
+  errorMessage?: string;
 }
 
 export const ValidationInput: React.FC<ValidationInputProps> = ({
@@ -53,11 +53,10 @@ export const ValidationInput: React.FC<ValidationInputProps> = ({
     }
   };
 
-  // Ограничение вводимых символов
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     const allowedCharacters = getAllowedCharacters(typeValidation);
     if (!allowedCharacters.test(e.key)) {
-      e.preventDefault(); // Блокируем символ, который не входит в допустимый список
+      e.preventDefault();
     }
   };
 

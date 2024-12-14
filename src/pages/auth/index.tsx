@@ -1,18 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import { observer } from "mobx-react";
-import { themeStore } from "shared/store";
-
 import { Container } from "shared/ui/Container";
 import { Block } from "shared/ui/Block";
 import { Row } from "shared/ui/Row";
 import { Button } from "shared/ui/Button";
-import { ThemeSwitch } from "shared/ui/ThemeSwitch";
-import { Input } from "shared/ui/Input";
-import { VscAccount } from "react-icons/vsc";
-import { Modal } from "shared/ui/Modal";
 import { NavBar } from "features/NavBar";
 import { ValidationInput } from "shared/ui/ValidationInput";
+import { Form } from "shared/ui/Form";
 
 export const LoginPage = observer(() => {
   const [value, setValue] = useState("");
@@ -30,22 +25,24 @@ export const LoginPage = observer(() => {
             <p>Прежде чем заняться своими делами, будь добр, авторизуйся</p>
           </Row>
 
-          <Row>
+          <Form onSubmit={() => console.log("")}>
             <ValidationInput
+              id="name"
               value={value}
               onChange={setValue}
-              typeValidation="email"
-              label="Введите почту"
+              typeValidation="names"
+              label="Введите имя"
             />
-          </Row>
-          <Row>
             <ValidationInput
               value={value}
               onChange={setValue}
               typeValidation="names"
               label="Введите имя"
             />
-          </Row>
+            <Row>
+              <Button>Тест</Button>
+            </Row>
+          </Form>
           <Row gapRow="16px">
             <Button variant="filled" onClick={() => console.log("TEST")}>
               Отменить
