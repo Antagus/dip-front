@@ -19,7 +19,6 @@
   }
 }
 
-/* Стили для input */
 .input {
   width: 100%;
   box-sizing: border-box;
@@ -47,13 +46,26 @@
   &:focus::placeholder {
     opacity: 0.5;
   }
+
+  &:-webkit-autofill {
+    background-color: var(--background-color) !important;
+    color: var(--text-color) !important;
+    box-shadow: 0 0 0px 1000px var(--background-color) inset !important;
+    -webkit-text-fill-color: var(--text-color) !important;
+  }
+
+  &:-webkit-autofill:focus {
+    background-color: var(--background-color) !important;
+    color: var(--text-color) !important;
+    box-shadow: 0 0 0px 1000px var(--background-color) inset !important;
+    -webkit-text-fill-color: var(--text-color) !important;
+  }
 }
 
 .inputFocused {
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
 }
 
-/* Лейбл */
 .inputLabel {
   position: absolute;
   top: 12px;

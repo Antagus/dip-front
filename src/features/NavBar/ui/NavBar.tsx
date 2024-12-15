@@ -11,8 +11,7 @@ import { ThemeSwitch } from "shared/ui/ThemeSwitch";
 type TabActivies = { nameTab: TabActive; url: string };
 
 const NavBar = observer(() => {
-  const { theme, changeTotalTabActive, currentTabActive, toggleTheme } =
-    themeStore;
+  const { theme, changeTotalTabActive, currentTabActive } = themeStore;
 
   const listMenuTabs: Array<TabActivies> = [
     {

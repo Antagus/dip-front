@@ -2,7 +2,13 @@ import React, { useState } from "react";
 import { Input } from "../Input/Input";
 import styles from "./ValidationInput.module.scss";
 
-type ValidationType = "email" | "password" | "required" | "names";
+type ValidationType =
+  | "email"
+  | "password"
+  | "required"
+  | "names"
+  | "date"
+  | "all";
 
 interface ValidationInputProps {
   id?: string;
@@ -13,6 +19,7 @@ interface ValidationInputProps {
   type?: string;
   typeValidation: ValidationType;
   errorMessage?: string;
+  required?: boolean;
 }
 
 export const ValidationInput: React.FC<ValidationInputProps> = ({
@@ -24,6 +31,7 @@ export const ValidationInput: React.FC<ValidationInputProps> = ({
   type = "text",
   typeValidation,
   errorMessage,
+  required = false,
 }) => {
   const [error, setError] = useState<string | null>(null);
 
@@ -35,9 +43,9 @@ export const ValidationInput: React.FC<ValidationInputProps> = ({
           ? null
           : errorMessage || "Введите корректный email";
       case "password":
-        return value.length >= 8
+        return value.length >= 6
           ? null
-          : errorMessage || "Пароль должен содержать минимум 8 символов";
+          : errorMessage || "Пароль должен содержать минимум 6 символов";
       case "required":
         return value.trim()
           ? null
@@ -48,6 +56,11 @@ export const ValidationInput: React.FC<ValidationInputProps> = ({
         return fioRegex.test(value)
           ? null
           : errorMessage || "Заполните поле корректно";
+      case "date":
+        const today = new Date().toISOString().split("T")[0]; // Текущая дата в формате YYYY-MM-DD
+        return value && value <= today
+          ? null
+          : errorMessage || "Дата рождения не может быть позже текущей";
       default:
         return null;
     }
@@ -65,7 +78,7 @@ export const ValidationInput: React.FC<ValidationInputProps> = ({
       case "email":
         return /^[a-zA-Z0-9@._-]$/;
       case "password":
-        return /^[a-zA-Z0-9!@#$%^&*()_+={}\[\]:;"'<>,.?/-]$/;
+        return /.*/;
       case "required":
         return /^[a-zA-Z0-9 ]$/;
       case "names":

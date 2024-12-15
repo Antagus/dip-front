@@ -9,6 +9,7 @@ type Props = {
   gapRow?: string;
   padding?: string;
   margin?: string;
+  flex?: string;
 } & React.HTMLAttributes<HTMLElement>;
 
 export const Row: React.FC<Props> = ({
@@ -16,8 +17,8 @@ export const Row: React.FC<Props> = ({
   style = {},
   tPadding = "8px",
   bPadding = "8px",
-  lPadding,
-  rPadding,
+  lPadding = "16px",
+  rPadding = "16px",
   gapRow = "8px",
   padding = `${tPadding} ${lPadding} ${bPadding} ${rPadding}`,
   margin,

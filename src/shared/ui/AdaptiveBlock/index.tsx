@@ -4,15 +4,15 @@ import { themeStore } from "shared/store";
 
 type PropsBlock = {
   children?: React.ReactNode;
-  padding?: string; // Добавляем padding в свойства
+  padding?: string;
 } & React.HTMLAttributes<HTMLElement>;
 
-export const Block: React.FC<PropsBlock> = observer(
+export const AdaptiveBlock: React.FC<PropsBlock> = observer(
   ({ children, padding = "10px 0px 10px 0px", style, ...rest }) => {
     return (
       <article
         style={{ padding, ...style }}
-        className={`block ${themeStore.theme}-block-theme`}
+        className={`adaptive-block ${themeStore.theme}-block-theme`}
         {...rest}
       >
         {children}
