@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, { useState } from "react";
 import { useDevice } from "shared/hooks";
 import {
@@ -20,10 +21,29 @@ export const RegistrationForm: React.FC<AuthParams> = ({ setAuth }) => {
   const [name, setName] = useState("");
   const [secondName, setSecondName] = useState("");
   const [email, setEmail] = useState("");
+  const [error, setError] = useState("");
 
   const [date, setDate] = useState(new Date().toDateString());
 
-  const handleSubmit = (data: Record<string, string>) => {
+  const handleSubmit = async (data: Record<string, string>) => {
+    try {
+      await axios.post("http://localhost:3222/users/", {
+        firstName: data.name,
+        lastName: data.secondName,
+        middleName: "",
+        email: data.email,
+        password: data.password,
+        dateOfBirth: data.dateBirth,
+        accountType: 1,
+      });
+    } catch (err: any) {
+      if (err.response && err.response.data && err.response.data.message) {
+        setError("Учетная запись с данной почтой, уже зарегистрирована.");
+        console.log(err.response.data.message);
+      } else {
+        console.log("Произошла ошибка, попробуйте снова.");
+      }
+    }
     console.log("Данные формы:", data);
   };
   return (
@@ -79,6 +99,10 @@ export const RegistrationForm: React.FC<AuthParams> = ({ setAuth }) => {
             type="password"
             label="Укажите пароль"
           />
+
+          <Row>
+            <p style={{ color: "red" }}>{error}</p>
+          </Row>
 
           <StickySection>
             <Row padding="20px 0px 20px 0px">

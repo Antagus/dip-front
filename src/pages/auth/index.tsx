@@ -8,7 +8,7 @@ export const LoginPage = observer(() => {
 
   return (
     <>
-      {/* <NavBar /> */}{" "}
+      {/* <NavBar /> */}
       {authPage ? (
         <AuthForm setAuth={setAuthPage} />
       ) : (

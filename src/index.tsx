@@ -5,6 +5,7 @@ import App from "./routes";
 
 import "app/global.css";
 import { ThemeProvider } from "shared/store/ThemeProvider";
+import { GlobalStoreProvider } from "shared/store/GlobalProvider";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -12,8 +13,10 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <React.StrictMode>
-    <ThemeProvider>
-      <App />
-    </ThemeProvider>
+    <GlobalStoreProvider>
+      <ThemeProvider>
+        <App />
+      </ThemeProvider>
+    </GlobalStoreProvider>
   </React.StrictMode>
 );

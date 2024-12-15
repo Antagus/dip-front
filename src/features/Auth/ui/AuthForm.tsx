@@ -1,5 +1,10 @@
+import axios from "axios";
+import { observer } from "mobx-react-lite";
 import React, { useState } from "react";
 import { useDevice } from "shared/hooks";
+import { globalStore } from "shared/store/globalStore";
+import { useNavigate } from "react-router-dom";
+
 import {
   AdaptiveBlock,
   Button,
@@ -14,13 +19,38 @@ type AuthParams = {
   setAuth: (param: boolean) => void;
 };
 
-export const AuthForm: React.FC<AuthParams> = ({ setAuth }) => {
+export const AuthForm: React.FC<AuthParams> = observer(({ setAuth }) => {
   const { isMobile } = useDevice();
-  const [value, setValue] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
-  const handleSubmit = (data: Record<string, string>) => {
-    console.log("Данные формы:", data);
+  const navigation = useNavigate();
+
+  const handleSubmit = async (data: Record<string, string>) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:3222/users/auth/login",
+        {
+          email: data.email,
+          password: data.password,
+        }
+      );
+      const userData = response.data;
+      globalStore.setUser(userData);
+      navigation("/main");
+    } catch (err: any) {
+      if (err.response && err.response.data && err.response.data.message) {
+        setError("Неправильный логин или пароль. Повторите попытку еще раз!");
+        console.log(err.response.data.message);
+      } else {
+        console.log("Произошла ошибка, попробуйте снова.", err);
+      }
+    }
+
+    console.log("Данные формы:", data); // Вывод данных формы
   };
+
   return (
     <Container padding={isMobile ? "0px 0px 0px 0px" : "20px 0px 0px 0px"}>
       <AdaptiveBlock>
@@ -34,22 +64,33 @@ export const AuthForm: React.FC<AuthParams> = ({ setAuth }) => {
         <Form onSubmit={handleSubmit}>
           <ValidationInput
             id="email"
-            value={value}
-            onChange={setValue}
+            value={email}
+            onChange={setEmail}
             typeValidation="email"
-            label="Введите почту"
+            label="Введите электронную почту"
             required={true}
           />
           <ValidationInput
-            id="name"
-            value={value}
-            onChange={setValue}
-            typeValidation="names"
-            label="Введите имя"
+            id="password"
+            value={password}
+            onChange={setPassword}
+            typeValidation="password"
+            label="Введите пароль"
+            type="password"
           />
+          <Row
+            padding={
+              error.length === 0 ? "0px 0px 0px 0px" : "16px 0px 16px 0px"
+            }
+          >
+            <p style={{ color: "red" }}>{error}</p>
+          </Row>
 
-          <Row padding="16px 0px 0px 0px">
-            <p color="#427ba4" onClick={() => setAuth(false)}>
+          <Row padding="8px 0px 0px 0px">
+            <p
+              style={{ color: "#427ba4", cursor: "pointer" }}
+              onClick={() => setAuth(false)}
+            >
               У меня нет аккаунта. Зарегистрировать?
             </p>
           </Row>
@@ -63,4 +104,4 @@ export const AuthForm: React.FC<AuthParams> = ({ setAuth }) => {
       </AdaptiveBlock>
     </Container>
   );
-};
+});

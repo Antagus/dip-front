@@ -9,3 +9,4 @@ export { ThemeSwitch } from "./ThemeSwitch";
 export { ValidationInput } from "./ValidationInput";
 export { AdaptiveBlock } from "./AdaptiveBlock";
 export { StickySection } from "./StickyContent";
+export { ResponsiveGrid } from "./ResponsiveGrid";
