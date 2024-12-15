@@ -80,7 +80,7 @@ export const ValidationInput: React.FC<ValidationInputProps> = ({
       case "password":
         return /.*/;
       case "required":
-        return /^[a-zA-Z0-9 ]$/;
+        return /.*/;
       case "names":
         return /^[а-яА-ЯёЁ.\s-]$/;
       default:

@@ -10,3 +10,4 @@ export { ValidationInput } from "./ValidationInput";
 export { AdaptiveBlock } from "./AdaptiveBlock";
 export { StickySection } from "./StickyContent";
 export { ResponsiveGrid } from "./ResponsiveGrid";
+export { ComboBox } from "./ComboBox";

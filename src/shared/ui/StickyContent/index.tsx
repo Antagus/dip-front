@@ -5,10 +5,11 @@ import { themeStore } from "shared/store";
 
 type StickySectionProps = {
   children: React.ReactNode;
+  color?: string;
 };
 
 export const StickySection: React.FC<StickySectionProps> = observer(
-  ({ children }) => {
+  ({ children, color = "#191919" }) => {
     const sectionRef = useRef<HTMLDivElement | null>(null);
     const { theme } = themeStore;
     const [isSticky, setSticky] = useState<boolean>(false);
@@ -39,7 +40,6 @@ export const StickySection: React.FC<StickySectionProps> = observer(
       <section
         ref={sectionRef}
         style={
-          // eslint-disable-next-line no-nested-ternary
           isMobile
             ? {
                 position: "fixed",

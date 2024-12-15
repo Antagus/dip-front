@@ -16,9 +16,14 @@ interface ValidationInputProps {
 interface FormProps {
   onSubmit: (data: Record<string, string>) => void;
   children: ReactNode;
+  padding?: string;
 }
 
-export const Form: React.FC<FormProps> = ({ onSubmit, children }) => {
+export const Form: React.FC<FormProps> = ({
+  onSubmit,
+  children,
+  padding = "0px 16px 0px 16px",
+}) => {
   const [formState, setFormState] = React.useState<Record<string, string>>({});
   const [errors, setErrors] = React.useState<Record<string, string>>({});
 
@@ -123,7 +128,7 @@ export const Form: React.FC<FormProps> = ({ onSubmit, children }) => {
     });
 
   return (
-    <form style={{ padding: "0px 16px 0px 16px" }} onSubmit={handleSubmit}>
+    <form style={{ padding: padding }} onSubmit={handleSubmit}>
       {renderChildren()}
     </form>
   );

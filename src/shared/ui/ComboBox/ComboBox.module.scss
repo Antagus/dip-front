@@ -1,0 +1,114 @@
+.comboBoxContainer {
+  position: relative;
+  width: 100%;
+  margin-bottom: 8px;
+  margin-top: 16px;
+  --focus-color: #0056b3;
+
+  &.dark {
+    --background-color: #222;
+    --text-color: #fff;
+    --border-color: #444;
+    --hover-background-color: #333; /* Фон при наведении */
+    --selected-background-color: #427ba4; /* Фон выбранного элемента */
+    --selected-text-color: #fff;
+  }
+
+  &.light {
+    --background-color: #fff;
+    --text-color: #000;
+    --border-color: #ccc;
+    --focus-color: #0056b3;
+    --hover-background-color: #f0f0f0; /* Фон при наведении */
+    --selected-background-color: #0056b3; /* Фон выбранного элемента */
+    --selected-text-color: #fff;
+  }
+}
+
+.comboBoxInput {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px 16px;
+  border: 1px solid var(--border-color);
+  background-color: var(--background-color);
+  color: var(--text-color);
+  font-size: 16px;
+  border-radius: 8px;
+  outline: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:focus {
+    border-color: var(--focus-color);
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+  }
+}
+
+.placeholder {
+  color: #888;
+  opacity: 0.8;
+}
+
+.arrow {
+  font-size: 12px;
+  color: var(--text-color);
+  transition: transform 0.3s ease;
+}
+
+.comboBoxOptions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  background-color: var(--background-color);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  max-height: 200px;
+  overflow-y: auto;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+  padding: 4px 0;
+  list-style: none;
+  margin: 4px 0 0;
+}
+
+.option {
+  padding: 8px 16px;
+  font-size: 16px;
+  color: var(--text-color);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: var(--hover-background-color);
+    color: var(--text-color);
+  }
+}
+
+.selectedOption {
+  background-color: var(--selected-background-color);
+  color: var(--selected-text-color);
+}
+
+.comboBoxLabel {
+  position: absolute;
+  top: 50%;
+  left: 16px;
+  transform: translateY(-50%);
+  font-size: 14px;
+  color: #888;
+  background-color: var(--background-color);
+  padding: 0 4px;
+  transition: all 0.3s ease;
+  pointer-events: none;
+
+  &.inputLabelActive {
+    top: -8px;
+    transform: none;
+    color: var(--focus-color);
+    font-size: 14px;
+  }
+}

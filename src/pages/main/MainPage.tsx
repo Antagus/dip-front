@@ -1,3 +1,4 @@
+import { AccountList } from "features/AccountList/ui";
 import { NavBar } from "features/NavBar";
 import { observer } from "mobx-react-lite";
 import React from "react";
@@ -17,10 +18,7 @@ export const MainPage = observer(() => {
   const AccountBlock = () => {
     return (
       <Block>
-        <Row>Счет</Row>
-        <Row>Ахахах</Row>
-        <Row>Ахахах</Row>
-        <Row>Ахахах</Row>
+        <AccountList />
       </Block>
     );
   };
@@ -32,8 +30,8 @@ export const MainPage = observer(() => {
       <Container>
         <ResponsiveGrid
           leftColumn={<AccountBlock />}
-          middleColumn={<AccountBlock />}
-          rightColumn={<AccountBlock />}
+          middleColumn={<Block />}
+          rightColumn={<Block />}
         />
       </Container>
     </>

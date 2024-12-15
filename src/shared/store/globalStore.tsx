@@ -1,34 +1,27 @@
 import { makeAutoObservable } from "mobx";
-
-type UserProps = {
-  id: number | null;
-  firstName: string | null;
-  lastName: string | null;
-  middleName: string | null;
-  email: string | null;
-  dateOfBirth: string | null;
-  registrationDate: string | null;
-  accountType: number | null;
-};
-
-type UserPropsJSON = {
-  id: number;
-  first_name: string;
-  last_name: string;
-  middle_name?: string | null;
-  email: string;
-  date_of_birth?: string | null;
-  registration_date?: string | null;
-  account_type: number;
-};
+import { Account, UserProps, UserPropsJSON } from "./type";
 
 class GlobalStore {
   user: UserProps | null = null;
   isAuthenticated: boolean = false;
+  accounts: Array<Account> = [];
+
+  selectedAccountId: number = 0;
 
   constructor() {
     makeAutoObservable(this);
   }
+
+  setAccountsUser = (accounts: Array<Account>) => {
+    this.accounts = accounts;
+    if (this.accounts.length > 0) {
+      this.selectedAccountId = this.accounts[0].id;
+    }
+  };
+
+  setTotalAccountId = (accountId: number) => {
+    this.selectedAccountId = accountId;
+  };
 
   // Устанавливаем данные пользователя
   setUser(userData: UserPropsJSON) {

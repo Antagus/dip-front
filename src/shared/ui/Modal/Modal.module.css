@@ -26,7 +26,7 @@
 }
 
 /* Стили для мобильного экрана */
-@media (max-width: 600px) {
+@media (max-width: 768px) {
   .modal {
     position: fixed;
     bottom: 0;
