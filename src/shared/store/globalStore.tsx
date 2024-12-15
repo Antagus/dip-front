@@ -7,15 +7,26 @@ class GlobalStore {
   accounts: Array<Account> = [];
 
   selectedAccountId: number = 0;
+  updateState: boolean = false;
 
   constructor() {
     makeAutoObservable(this);
   }
 
+  reloadUpdateState = () => {
+    this.updateState = !this.updateState;
+  };
+
+  addAccount = (account: Account) => {
+    this.accounts = [...this.accounts, account];
+  };
+
   setAccountsUser = (accounts: Array<Account>) => {
     this.accounts = accounts;
     if (this.accounts.length > 0) {
       this.selectedAccountId = this.accounts[0].id;
+    } else {
+      this.selectedAccountId = 0;
     }
   };
 

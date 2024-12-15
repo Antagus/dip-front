@@ -20,7 +20,7 @@ export const Modal: React.FC<ModalProps> = ({
   const themeStyles =
     themeStore.theme === "dark"
       ? {
-          "--background-color": "#222",
+          "--background-color": "#191919",
           "--text-color": "#fff",
         }
       : {

@@ -29,7 +29,7 @@ export const AccountList = observer(() => {
       if (id && accounts.length === 0) {
         try {
           const response = await axios.get(
-            `http://localhost:3222/accounts/user/${2}`
+            `http://localhost:3222/accounts/user/${user?.id}`
           );
           if (response.data) {
             setAccountsUser(response.data);
@@ -46,7 +46,7 @@ export const AccountList = observer(() => {
     if (user?.id && accounts.length === 0) {
       getUserAccounts(user.id);
     }
-  }, [user?.id]);
+  }, [user?.id, globalStore.accounts]);
 
   return (
     <div className="account-list">
@@ -67,23 +67,29 @@ export const AccountList = observer(() => {
           onClick={() => setModalVisionAdd(true)}
         />
       </Row>
-      {accounts?.map((account) => {
-        return (
-          <Row key={account.id}>
-            <AccountCard
-              key={account.id}
-              account={{
-                id: account.id,
-                account_name: account.account_name || "Безымянный счет",
-                total_balance: account.total_balance.toString(),
-                currency: account.currency,
-              }}
-              isSelected={account.id === selectedAccountId}
-              onClick={handleClick}
-            />
-          </Row>
-        );
-      })}
+      {accounts.length !== 0 ? (
+        accounts?.map((account) => {
+          return (
+            <Row key={account.id}>
+              <AccountCard
+                key={account.id}
+                account={{
+                  id: account.id,
+                  account_name: account.account_name || "Безымянный счет",
+                  total_balance: account.total_balance.toString(),
+                  currency: account.currency,
+                }}
+                isSelected={account.id === selectedAccountId}
+                onClick={handleClick}
+              />
+            </Row>
+          );
+        })
+      ) : (
+        <Row>
+          <p>Перед началом работы создайте вирутальный счет</p>
+        </Row>
+      )}
       <AccountAddForm
         isOpen={modalVisionAdd}
         onClose={() => setModalVisionAdd(false)}
