@@ -1,12 +1,14 @@
 import { makeAutoObservable } from "mobx";
-import { Account, UserProps, UserPropsJSON } from "./type";
+import { Account, Category, UserProps, UserPropsJSON } from "./type";
 
 class GlobalStore {
   user: UserProps | null = null;
   isAuthenticated: boolean = false;
   accounts: Array<Account> = [];
 
-  selectedAccountId: number = 0;
+  allUserCategories: Array<Category> = [];
+
+  selectedAccountId: Account | null | undefined;
   updateState: boolean = false;
 
   constructor() {
@@ -24,13 +26,13 @@ class GlobalStore {
   setAccountsUser = (accounts: Array<Account>) => {
     this.accounts = accounts;
     if (this.accounts.length > 0) {
-      this.selectedAccountId = this.accounts[0].id;
+      this.selectedAccountId = this.accounts[0];
     } else {
-      this.selectedAccountId = 0;
+      this.selectedAccountId = null;
     }
   };
 
-  setTotalAccountId = (accountId: number) => {
+  setTotalAccountId = (accountId: Account | null | undefined) => {
     this.selectedAccountId = accountId;
   };
 

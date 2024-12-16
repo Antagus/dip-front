@@ -8,7 +8,8 @@ type ValidationType =
   | "required"
   | "names"
   | "date"
-  | "all";
+  | "all"
+  | "number";
 
 interface ValidationInputProps {
   id?: string;
@@ -57,10 +58,15 @@ export const ValidationInput: React.FC<ValidationInputProps> = ({
           ? null
           : errorMessage || "Заполните поле корректно";
       case "date":
-        const today = new Date().toISOString().split("T")[0]; // Текущая дата в формате YYYY-MM-DD
+        const today = new Date().toISOString().split("T")[0];
         return value && value <= today
           ? null
           : errorMessage || "Дата рождения не может быть позже текущей";
+      case "number":
+        const numberRegex = /^\d*(\.\d{0,2})?$/;
+        return numberRegex.test(value)
+          ? null
+          : errorMessage || "Введите корректное число, например 34.41";
       default:
         return null;
     }
@@ -83,6 +89,8 @@ export const ValidationInput: React.FC<ValidationInputProps> = ({
         return /.*/;
       case "names":
         return /^[а-яА-ЯёЁ.\s-]$/;
+      case "number":
+        return /^[0-9.]$/; // Разрешаем только цифры и точку
       default:
         return /.*/;
     }

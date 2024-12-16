@@ -26,6 +26,22 @@ export type UserPropsJSON = {
 export type Account = {
   id: number;
   account_name: string;
-  total_balance: number;
+  total_balance: number | string;
   currency: string;
+};
+
+export type Category = {
+  id: number;
+  category_name: string;
+};
+
+export type Transaction = {
+  id: number;
+  account_id: number;
+  user_id: number;
+  category_id: number;
+  is_income: boolean;
+  transaction_date: string;
+  amount: string;
+  name: string;
 };

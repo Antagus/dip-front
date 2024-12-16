@@ -7,16 +7,17 @@ import { CgTrashEmpty } from "react-icons/cg";
 import axios from "axios";
 import { globalStore } from "shared/store/globalStore";
 import { Button, Modal, Row, StickySection } from "shared/ui";
+import { Account } from "shared/store/type";
 
 type AccountCardProps = {
   account: {
     id: number;
     account_name: string;
-    total_balance: string;
+    total_balance: string | number;
     currency: string;
   };
   isSelected?: boolean; // Выбран ли данный аккаунт
-  onClick?: (id: number) => void; // Обработчик клика
+  onClick?: (id: Account) => void; // Обработчик клика
 };
 
 export const AccountCard: React.FC<AccountCardProps> = observer(
@@ -26,7 +27,7 @@ export const AccountCard: React.FC<AccountCardProps> = observer(
 
     const handleCardClick = () => {
       if (onClick) {
-        onClick(account.id);
+        onClick(account);
       }
     };
 
@@ -34,7 +35,7 @@ export const AccountCard: React.FC<AccountCardProps> = observer(
       try {
         await axios.delete(`http://localhost:3222/accounts/${account.id}`);
         globalStore.accounts = [];
-        globalStore.setTotalAccountId(0);
+        globalStore.setTotalAccountId(null);
       } catch (err: any) {
         console.log(err);
       }

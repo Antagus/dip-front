@@ -7,6 +7,7 @@ import { Form, Modal, Row, ValidationInput } from "shared/ui";
 
 import { IoIosAdd } from "react-icons/io";
 import { AccountAddForm } from "./AccountAddForm";
+import { Account } from "shared/store/type";
 
 export const AccountList = observer(() => {
   const {
@@ -19,7 +20,7 @@ export const AccountList = observer(() => {
 
   const [modalVisionAdd, setModalVisionAdd] = useState(false);
 
-  const handleClick = (id: number) => {
+  const handleClick = (id: Account) => {
     console.log(selectedAccountId);
     setTotalAccountId(id);
   };
@@ -79,7 +80,7 @@ export const AccountList = observer(() => {
                   total_balance: account.total_balance.toString(),
                   currency: account.currency,
                 }}
-                isSelected={account.id === selectedAccountId}
+                isSelected={account.id === selectedAccountId?.id}
                 onClick={handleClick}
               />
             </Row>

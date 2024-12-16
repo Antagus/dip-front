@@ -1,5 +1,6 @@
 import { AccountList } from "features/AccountList/ui";
 import { NavBar } from "features/NavBar";
+import { TransactionBlock } from "features/Transaction/ui/TransactionBlock";
 import { observer } from "mobx-react-lite";
 import React from "react";
 import { useNavigate } from "react-router-dom";
@@ -8,7 +9,7 @@ import { Block, Container, ResponsiveGrid, Row } from "shared/ui";
 
 export const MainPage = observer(() => {
   const navigation = useNavigate();
-  const { user, isAuthenticated } = globalStore;
+  const { isAuthenticated } = globalStore;
 
   if (!isAuthenticated) {
     navigation("/");
@@ -30,7 +31,7 @@ export const MainPage = observer(() => {
       <Container>
         <ResponsiveGrid
           leftColumn={<AccountBlock />}
-          middleColumn={<Block />}
+          middleColumn={<TransactionBlock />}
           rightColumn={<Block />}
         />
       </Container>
