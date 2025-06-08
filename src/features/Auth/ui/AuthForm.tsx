@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 
 import {
   AdaptiveBlock,
+  Block,
   Button,
   Container,
   Form,
@@ -37,6 +38,10 @@ export const AuthForm: React.FC<AuthParams> = observer(({ setAuth }) => {
         }
       );
       const userData = response.data;
+      console.log("User Data", userData);
+
+      localStorage.setItem("user", JSON.stringify(userData));
+
       globalStore.setUser(userData);
       navigation("/main");
     } catch (err: any) {
@@ -94,12 +99,15 @@ export const AuthForm: React.FC<AuthParams> = observer(({ setAuth }) => {
               У меня нет аккаунта. Зарегистрировать?
             </p>
           </Row>
+          {/* <StickySection> */}
 
-          <StickySection>
+          <section>
             <Row padding="20px 0px 20px 0px">
               <Button type="submit">Войти</Button>
             </Row>
-          </StickySection>
+          </section>
+
+          {/* </StickySection> */}
         </Form>
       </AdaptiveBlock>
     </Container>

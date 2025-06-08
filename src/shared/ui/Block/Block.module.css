@@ -4,13 +4,15 @@
 
 .adaptive-block {
   border-radius: 15px;
+  width: 100%;
+  
   @media (max-width: 768px) {
     height: 100vh;
     border-radius: 0px;
     overflow: hidden;
   }
 
-  @media (min-width: 769px) {
+  @media (min-width: 768px) {
     height: auto; /* Автоматическая высота по содержимому */
   }
 }

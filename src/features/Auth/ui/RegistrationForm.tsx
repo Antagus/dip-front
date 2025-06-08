@@ -36,6 +36,7 @@ export const RegistrationForm: React.FC<AuthParams> = ({ setAuth }) => {
         dateOfBirth: data.dateBirth,
         accountType: 1,
       });
+      setAuth(true);
     } catch (err: any) {
       if (err.response && err.response.data && err.response.data.message) {
         setError("Учетная запись с данной почтой, уже зарегистрирована.");
@@ -54,7 +55,7 @@ export const RegistrationForm: React.FC<AuthParams> = ({ setAuth }) => {
         </Row>
         <Row tPadding="10px">
           <p>
-            Ваш аккаунт, это ваша собственность не забывайте свои данные и не
+            Ваш аккаунт, это ваша собственность, не забывайте свои данные и не
             передавайте их другим
           </p>
         </Row>

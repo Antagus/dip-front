@@ -1,4 +1,8 @@
+import axios from "axios";
 import React, { useState } from "react";
+import { createTransaction } from "shared/api";
+import { useDevice } from "shared/hooks";
+import { globalStore } from "shared/store/globalStore";
 import { Transaction } from "shared/store/type";
 import {
   Button,
@@ -22,11 +26,35 @@ export const TransactionForm: React.FC<Props> = ({
   isOpen,
 }) => {
   const [nameTransaction, setNameTransaction] = useState(
-    transaction ? transaction?.name : ""
+    transaction ? transaction?.transaction_name : ""
   );
+  const { isMobile } = useDevice();
   const options = ["Доход", "Расход"];
+  const optionsCategoryE = [
+    "Нет категории",
+    "Заработная плата",
+    "Инвестиции",
+    "Прочие поступления",
+  ];
+  const optionsCategoryD = ["Нет категории", "Продукты", "Транспорт"];
 
   const [selectedOption, setSelectedOption] = useState(options[0]);
+  const [selectedOptionE, setSelectedOptionE] = useState(optionsCategoryE[0]);
+  const [selectedOptionD, setSelectedOptionD] = useState(optionsCategoryD[0]);
+
+  const handleSumbitTransaction = async (data: Record<string, string>) => {
+    createTransaction(
+      globalStore?.selectedAccountId?.id,
+      data.name,
+      data.amount,
+      globalStore.user?.id,
+      selectedOption === "Доход",
+      1
+    );
+
+    globalStore.reloadUpdateState();
+    onClose();
+  };
 
   return (
     <Modal
@@ -34,7 +62,10 @@ export const TransactionForm: React.FC<Props> = ({
       isOpen={isOpen}
       nameModal={transaction ? "Изменение транзакции" : "Добавление транзакции"}
     >
-      <Form onSubmit={(data) => console.log(data)} padding="16px 0px">
+      <Form
+        onSubmit={(data) => handleSumbitTransaction(data)}
+        padding={isMobile ? "16px 0px 100px 0px" : "16px 0px 0px 0px"}
+      >
         <ValidationInput
           id="name"
           value={nameTransaction}
@@ -51,13 +82,31 @@ export const TransactionForm: React.FC<Props> = ({
           label="Сумма операции"
           required={true}
         />
-        <Row padding="16px 0px">
+        <Row padding="16px 0px 0px 0px">
           <ComboBox
             options={options}
             value={selectedOption}
             onChange={setSelectedOption}
             placeholder=""
             label="Тип операция"
+          />
+        </Row>
+
+        <Row padding="0px 0px 0px 0px">
+          <ComboBox
+            options={
+              selectedOption === "Доход" ? optionsCategoryE : optionsCategoryD
+            }
+            value={
+              selectedOption === "Доход" ? selectedOptionE : selectedOptionD
+            }
+            onChange={
+              selectedOption === "Доход"
+                ? setSelectedOptionE
+                : setSelectedOptionD
+            }
+            placeholder=""
+            label="Выберите категорию"
           />
         </Row>
 

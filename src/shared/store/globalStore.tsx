@@ -1,11 +1,18 @@
-import { makeAutoObservable } from "mobx";
-import { Account, Category, UserProps, UserPropsJSON } from "./type";
+import { makeAutoObservable, runInAction } from "mobx";
+import {
+  Account,
+  Category,
+  MenuActive,
+  TabActive,
+  UserProps,
+  UserPropsJSON,
+} from "./type";
 
 class GlobalStore {
   user: UserProps | null = null;
   isAuthenticated: boolean = false;
   accounts: Array<Account> = [];
-
+  menuTotalTab: TabActive = "Главная";
   allUserCategories: Array<Category> = [];
 
   selectedAccountId: Account | null | undefined;
@@ -13,10 +20,29 @@ class GlobalStore {
 
   constructor() {
     makeAutoObservable(this);
+
+    const saved = localStorage.getItem("user");
+    if (saved) {
+      try {
+        const parsed: UserPropsJSON = JSON.parse(saved);
+        console.log("SAVED", parsed);
+
+        runInAction(() => {
+          this.setUser(parsed);
+        });
+      } catch {
+        localStorage.removeItem("user");
+      }
+    }
   }
 
   reloadUpdateState = () => {
+    console.log("Обновление глобального состояния");
     this.updateState = !this.updateState;
+  };
+
+  setTotalMenuTab = (totalTab: TabActive) => {
+    this.menuTotalTab = totalTab;
   };
 
   addAccount = (account: Account) => {
@@ -25,11 +51,6 @@ class GlobalStore {
 
   setAccountsUser = (accounts: Array<Account>) => {
     this.accounts = accounts;
-    if (this.accounts.length > 0) {
-      this.selectedAccountId = this.accounts[0];
-    } else {
-      this.selectedAccountId = null;
-    }
   };
 
   setTotalAccountId = (accountId: Account | null | undefined) => {
@@ -37,17 +58,19 @@ class GlobalStore {
   };
 
   // Устанавливаем данные пользователя
-  setUser(userData: UserPropsJSON) {
-    if (!userData || typeof userData !== "object") {
+  setUser(data: UserPropsJSON) {
+    if (!data || typeof data !== "object") {
       throw new Error("Переданы некорректные данные пользователя в setUser");
     }
+    const userData = data.user;
+    const splitedName = data.user.full_name?.split(" ") || [];
 
     try {
       this.user = {
         id: userData.id,
-        firstName: userData.first_name || null,
-        lastName: userData.last_name || null,
-        middleName: userData.middle_name || null,
+        firstName: splitedName[0] || null,
+        lastName: splitedName[1] || null,
+        middleName: splitedName[2] || null,
         email: userData.email || null,
         dateOfBirth: userData.date_of_birth || null,
         registrationDate: userData.registration_date || null,

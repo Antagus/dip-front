@@ -12,15 +12,25 @@ export type UserProps = {
   accountType: number | null;
 };
 
+export enum MenuActive {
+  Main,
+  Calendar,
+  Category,
+  Analysis,
+}
+
 export type UserPropsJSON = {
-  id: number;
-  first_name: string;
-  last_name: string;
-  middle_name?: string | null;
-  email: string;
-  date_of_birth?: string | null;
-  registration_date?: string | null;
-  account_type: number;
+  user: {
+    id: number;
+    first_name?: string;
+    last_name?: string;
+    middle_name?: string | null;
+    full_name?: string;
+    email: string;
+    date_of_birth?: string | null;
+    registration_date?: string | null;
+    account_type: number;
+  };
 };
 
 export type Account = {
@@ -33,6 +43,8 @@ export type Account = {
 export type Category = {
   id: number;
   category_name: string;
+  image: string;
+  user_id: number;
 };
 
 export type Transaction = {
@@ -43,5 +55,5 @@ export type Transaction = {
   is_income: boolean;
   transaction_date: string;
   amount: string;
-  name: string;
+  transaction_name: string;
 };

@@ -1,6 +1,7 @@
 import axios from "axios";
 import { observer } from "mobx-react-lite";
 import React, { useState } from "react";
+import { createAccount } from "shared/api";
 import { globalStore } from "shared/store/globalStore";
 import {
   Button,
@@ -23,21 +24,15 @@ export const AccountAddForm: React.FC<AccountModalProps> = observer(
     const [selectedOption, setSelectedOption] = useState(options[1]);
 
     const handleSubmit = async (data: Record<string, string>) => {
-      if (globalStore.user && globalStore.accounts.length <= 15) {
-        try {
-          console.log(data);
-          const response = await axios.post("http://localhost:3222/accounts/", {
-            ownerId: globalStore.user.id,
-            accountName: data?.name || "Безымянный счет",
-            totalBalance: 0,
-            currency: selectedOption,
-          });
-          globalStore.accounts = [];
-          onClose();
-        } catch (err: any) {
-          console.log(err);
-        }
-      }
+      createAccount(
+        globalStore.user,
+        globalStore.accounts.length,
+        data,
+        selectedOption
+      );
+
+      globalStore.reloadUpdateState();
+      onClose();
     };
 
     return (

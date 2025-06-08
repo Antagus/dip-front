@@ -6,6 +6,7 @@ import { TbCategory2 } from "react-icons/tb";
 type CaterogyProps = {
   id: number;
   category_name: string;
+  image: string;
 };
 
 export const CaterogyItem: React.FC<CaterogyProps> = ({

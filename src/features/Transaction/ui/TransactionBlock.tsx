@@ -20,7 +20,7 @@ export const TransactionBlock = observer(() => {
     if (globalStore.user && globalStore.selectedAccountId) {
       try {
         const response = await axios.get(
-          `http://localhost:3222/transactions/account/${2}`
+          `http://localhost:3222/transactions/account/${globalStore.selectedAccountId.id}`
         );
         setTransactions(response?.data);
       } catch (err: any) {
@@ -46,7 +46,7 @@ export const TransactionBlock = observer(() => {
 
   useEffect(() => {
     handleLoadAllTransaction();
-  }, [globalStore?.selectedAccountId]);
+  }, [globalStore?.selectedAccountId, globalStore.updateState]);
 
   return (
     <Block>
@@ -101,9 +101,6 @@ export const TransactionBlock = observer(() => {
         isOpen={visibleModal}
       />
 
-      <StickySection>
-        <Button type="submit">Создать</Button>
-      </StickySection>
     </Block>
   );
 });

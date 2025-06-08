@@ -5,6 +5,7 @@ import styles from "./OperationItem.module.scss";
 
 import { MdAttachMoney } from "react-icons/md";
 import { MdMoneyOff } from "react-icons/md";
+import { useDevice } from "shared/hooks";
 
 type OperationProps = {
   id: number;
@@ -14,7 +15,7 @@ type OperationProps = {
   is_income: boolean;
   transaction_date: string;
   amount: string;
-  name: string;
+  transaction_name: string;
 };
 
 export const OperationItem: React.FC<OperationProps> = ({
@@ -23,19 +24,35 @@ export const OperationItem: React.FC<OperationProps> = ({
   is_income,
   transaction_date,
   amount,
-  name,
+  transaction_name,
 }) => {
   const getNameCategory = (id: Number) => {
     return globalStore.allUserCategories?.filter(
       (e) => e.id === category_id
     )[0];
   };
+  
 
   const nameCategory =
     getNameCategory(category_id)?.category_name || "Нет категории";
 
+  const { isMobile } = useDevice(); 
+
+  const formatBalance = (value: string | number, currency?: string) => {
+    const amount = Number(value) || 0;
+    if (currency) {
+      return amount.toLocaleString("ru-RU", {
+        style: "currency",
+        currency,
+      });
+    } else {
+      return amount.toLocaleString("ru-RU");
+    }
+  };
+
   return (
     <Row tPadding="20px">
+      
       <section className={`${styles.operationItem}`}>
         {is_income ? (
           <MdAttachMoney
@@ -51,21 +68,27 @@ export const OperationItem: React.FC<OperationProps> = ({
 
         <article className={`${styles.itemIconName}`}>
           <div>
-            <p style={{ fontWeight: 600 }}>{name}</p>
+            <p style={{ fontWeight: 600, paddingBottom: "5px" }}>{!transaction_name ? "Безымянная транзакция" : transaction_name}</p>
             <p
               className={`${styles.descriptionText}`}
               style={{ fontSize: "14px" }}
             >
-              {is_income ? "Доход" : "Трата"} по категории: {nameCategory}
+              {
+                !isMobile ? (
+                  <p>{is_income ? "Доход" : "Трата"} по категории: {nameCategory}</p>
+                ) : (
+                  <p>{is_income ? "Доход" : "Трата"}: {nameCategory}</p>
+                )
+              }
             </p>
           </div>
 
-          <p style={{ fontWeight: 600 }}>
+          <p style={{ fontWeight: 600, whiteSpace: "nowrap" }}>
             {is_income ? "+ " : ""}
-            {Number(amount).toLocaleString("ru-RU", {
-              style: "currency",
-              currency: globalStore.selectedAccountId?.currency,
-            })}
+            {
+              formatBalance(amount, globalStore.selectedAccountId?.currency)
+            }
+ 
           </p>
         </article>
       </section>

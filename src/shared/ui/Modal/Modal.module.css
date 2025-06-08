@@ -32,11 +32,9 @@
     bottom: 0;
     left: 0;
     width: 100%;
-    height: 50%; /* Занимает половину экрана */
     border-radius: 12px 12px 0 0; /* Скругляем только верхние углы */
-    max-width: 100%;
     box-sizing: border-box;
-    min-height: 420px;
+    min-height: 320px;
   }
 }
 

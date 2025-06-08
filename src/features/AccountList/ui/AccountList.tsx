@@ -8,6 +8,7 @@ import { Form, Modal, Row, ValidationInput } from "shared/ui";
 import { IoIosAdd } from "react-icons/io";
 import { AccountAddForm } from "./AccountAddForm";
 import { Account } from "shared/store/type";
+import { getAccount } from "shared/api";
 
 export const AccountList = observer(() => {
   const {
@@ -21,33 +22,23 @@ export const AccountList = observer(() => {
   const [modalVisionAdd, setModalVisionAdd] = useState(false);
 
   const handleClick = (id: Account) => {
-    console.log(selectedAccountId);
     setTotalAccountId(id);
   };
 
   const getUserAccounts = useCallback(
     async (id: number | undefined | null) => {
-      if (id && accounts.length === 0) {
-        try {
-          const response = await axios.get(
-            `http://localhost:3222/accounts/user/${user?.id}`
-          );
-          if (response.data) {
-            setAccountsUser(response.data);
-          }
-        } catch (err: any) {
-          console.log("Возникла ошибка с соединением c БД ", err);
-        }
+      const crAccount = getAccount(id);
+      if (crAccount) {
+        setAccountsUser(await crAccount);
       }
     },
     [user?.id]
   );
 
   useEffect(() => {
-    if (user?.id && accounts.length === 0) {
-      getUserAccounts(user.id);
-    }
-  }, [user?.id, globalStore.accounts]);
+    if (!user?.id) return;
+    getUserAccounts(user.id);
+  }, [user?.id, globalStore.updateState, getUserAccounts]);
 
   return (
     <div className="account-list">

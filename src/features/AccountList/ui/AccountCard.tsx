@@ -8,6 +8,7 @@ import axios from "axios";
 import { globalStore } from "shared/store/globalStore";
 import { Button, Modal, Row, StickySection } from "shared/ui";
 import { Account } from "shared/store/type";
+import { deleteAccount } from "shared/api";
 
 type AccountCardProps = {
   account: {
@@ -32,12 +33,20 @@ export const AccountCard: React.FC<AccountCardProps> = observer(
     };
 
     const handleDeleteAccount = async () => {
-      try {
-        await axios.delete(`http://localhost:3222/accounts/${account.id}`);
-        globalStore.accounts = [];
-        globalStore.setTotalAccountId(null);
-      } catch (err: any) {
-        console.log(err);
+      deleteAccount(account.id);
+      globalStore.setTotalAccountId(null);
+      globalStore.reloadUpdateState();
+    };
+
+    const formatBalance = (value: string | number, currency?: string) => {
+      const amount = Number(value) || 0;
+      if (currency) {
+        return amount.toLocaleString("ru-RU", {
+          style: "currency",
+          currency,
+        });
+      } else {
+        return amount.toLocaleString("ru-RU");
       }
     };
 
@@ -92,10 +101,7 @@ export const AccountCard: React.FC<AccountCardProps> = observer(
                 <FaCreditCard style={{ width: "22px", height: "22px" }} />
                 <div className={styles.content}>
                   <p className={styles.balance}>
-                    {Number(account.total_balance).toLocaleString("ru-RU", {
-                      style: "currency",
-                      currency: account.currency,
-                    })}
+                    {formatBalance(account.total_balance, account.currency)}
                   </p>
                   <p className={styles.accountName}>{account.account_name}</p>
                 </div>

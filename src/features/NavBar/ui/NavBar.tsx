@@ -3,12 +3,12 @@ import { observer } from "mobx-react-lite";
 import { themeStore } from "../../../shared/store/index";
 import { Container } from "../../../shared/ui/Container";
 import styles from "./NavBar.module.scss";
-import { TabActive } from "shared/store/type";
+import { MenuActive, TabActive } from "shared/store/type";
 import { Link } from "react-router-dom";
 import { ThemeSwitch } from "shared/ui/ThemeSwitch";
 import { globalStore } from "shared/store/globalStore";
 
-type TabActivies = { nameTab: TabActive; url: string };
+type TabActivies = { nameTab: TabActive };
 
 const NavBar = observer(() => {
   const { theme, changeTotalTabActive, currentTabActive } = themeStore;
@@ -19,19 +19,15 @@ const NavBar = observer(() => {
   const listMenuTabs: Array<TabActivies> = [
     {
       nameTab: "Главная",
-      url: "/main",
     },
     {
       nameTab: "Календарь",
-      url: "/calendar",
     },
     {
       nameTab: "Анализ",
-      url: "/analyse",
     },
     {
       nameTab: "Категории",
-      url: "/category",
     },
   ];
 
@@ -71,10 +67,11 @@ const NavBar = observer(() => {
             {listMenuTabs.map((menuItem) => (
               <li key={menuItem.nameTab} className={styles.menuItem}>
                 <Link
-                  to={menuItem.url}
+                  to={"#"}
                   onClick={() => {
                     changeTotalTabActive(menuItem.nameTab);
-                    setIsMenuOpen(false); // Закрываем меню после клика
+                    globalStore.setTotalMenuTab(menuItem.nameTab);
+                    setIsMenuOpen(false);
                   }}
                   className={
                     currentTabActive === menuItem.nameTab
