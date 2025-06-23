@@ -19,6 +19,15 @@ export enum MenuActive {
   Analysis,
 }
 
+export type Note = {
+  id: number;
+  user_id: number;
+  title: string;
+  description: string;
+  creation_date: Date;
+  reminder_date: Date;
+};
+
 export type UserPropsJSON = {
   user: {
     id: number;
@@ -42,9 +51,11 @@ export type Account = {
 
 export type Category = {
   id: number;
-  category_name: string;
+  categoryName: string;
   image: string;
-  user_id: number;
+  userId: number;
+  color: string;
+  categoryType: string;
 };
 
 export type Transaction = {

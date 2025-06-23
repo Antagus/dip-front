@@ -50,7 +50,7 @@ export const Modal: React.FC<ModalProps> = ({
       <div
         className={styles.modal}
         style={themeStyles as React.CSSProperties}
-        onClick={(e) => e.stopPropagation()} // Предотвращаем закрытие при клике внутри окна
+        onClick={(e) => e.stopPropagation()}
       >
         <div
           className={styles["name-modal"]}
@@ -67,7 +67,6 @@ export const Modal: React.FC<ModalProps> = ({
     </div>
   );
 
-  // Рендерим модальное окно в #modal-root
   return ReactDOM.createPortal(
     modalContent,
     document.getElementById("modal-root")!

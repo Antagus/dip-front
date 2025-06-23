@@ -20,9 +20,9 @@ const NavBar = observer(() => {
     {
       nameTab: "Главная",
     },
-    {
-      nameTab: "Календарь",
-    },
+    // {
+    //   nameTab: "Календарь",
+    // },
     {
       nameTab: "Анализ",
     },

@@ -1,4 +1,4 @@
-import { makeAutoObservable, runInAction } from "mobx";
+import { makeAutoObservable, reaction, runInAction } from "mobx";
 import {
   Account,
   Category,
@@ -7,6 +7,8 @@ import {
   UserProps,
   UserPropsJSON,
 } from "./type";
+import { getUserCategories } from "shared/api/category";
+import axios from "axios";
 
 class GlobalStore {
   user: UserProps | null = null;
@@ -21,6 +23,13 @@ class GlobalStore {
   constructor() {
     makeAutoObservable(this);
 
+    // reaction(
+    //   () => this.user?.id,
+    //   (userId) => {
+    //     if (userId) this.loadCategories(userId);
+    //   }
+    // );
+
     const saved = localStorage.getItem("user");
     if (saved) {
       try {
@@ -33,6 +42,17 @@ class GlobalStore {
       } catch {
         localStorage.removeItem("user");
       }
+    }
+  }
+
+  async loadCategories(userId: number) {
+    try {
+      const cats = await getUserCategories(userId);
+      runInAction(() => {
+        this.allUserCategories = cats ?? [];
+      });
+    } catch (e) {
+      console.error("Ошибка загрузки категорий", e);
     }
   }
 
@@ -55,6 +75,10 @@ class GlobalStore {
 
   setTotalAccountId = (accountId: Account | null | undefined) => {
     this.selectedAccountId = accountId;
+  };
+
+  setAllCategories = (categoryes: Category[]) => {
+    this.allUserCategories = categoryes;
   };
 
   // Устанавливаем данные пользователя

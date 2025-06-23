@@ -20,7 +20,7 @@ type AccountModalProps = {
 export const AccountAddForm: React.FC<AccountModalProps> = observer(
   ({ isOpen, onClose }) => {
     const [name, setNameAccount] = useState("");
-    const options = ["USD", "RUB", "EUR", "BTC", "ETH"];
+    const options = ["USD", "RUB", "EUR", "XBT", "ETH"];
     const [selectedOption, setSelectedOption] = useState(options[1]);
 
     const handleSubmit = async (data: Record<string, string>) => {

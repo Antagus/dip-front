@@ -1,9 +1,9 @@
-import axios from "axios";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { createTransaction } from "shared/api";
+import { getUserCategories } from "shared/api/category";
 import { useDevice } from "shared/hooks";
 import { globalStore } from "shared/store/globalStore";
-import { Transaction } from "shared/store/type";
+import { Transaction, Category } from "shared/store/type";
 import {
   Button,
   ComboBox,
@@ -25,33 +25,43 @@ export const TransactionForm: React.FC<Props> = ({
   onClose,
   isOpen,
 }) => {
-  const [nameTransaction, setNameTransaction] = useState(
-    transaction ? transaction?.transaction_name : ""
-  );
   const { isMobile } = useDevice();
-  const options = ["Доход", "Расход"];
-  const optionsCategoryE = [
-    "Нет категории",
-    "Заработная плата",
-    "Инвестиции",
-    "Прочие поступления",
-  ];
-  const optionsCategoryD = ["Нет категории", "Продукты", "Транспорт"];
+  const [nameTransaction, setNameTransaction] = useState(
+    transaction?.transaction_name || ""
+  );
+  const [amount, setAmount] = useState<string>(
+    transaction?.amount.toString() || ""
+  );
+  // Тип операции: true=доход, false=расход
+  const [isIncome, setIsIncome] = useState(
+    transaction ? transaction.is_income : true
+  );
+  // Загруженные категории
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string>("");
 
-  const [selectedOption, setSelectedOption] = useState(options[0]);
-  const [selectedOptionE, setSelectedOptionE] = useState(optionsCategoryE[0]);
-  const [selectedOptionD, setSelectedOptionD] = useState(optionsCategoryD[0]);
+  // Подгружаем категории для пользователя
+  useEffect(() => {
+    const load = async () => {
+      const cats = await getUserCategories(globalStore.user?.id);
+      if (cats) setCategories(cats);
+    };
+    load();
+  }, []);
 
-  const handleSumbitTransaction = async (data: Record<string, string>) => {
-    createTransaction(
-      globalStore?.selectedAccountId?.id,
+  const filtered = categories.filter((cat) =>
+    isIncome ? cat.categoryType === "Доход" : cat.categoryType === "Расход"
+  );
+
+  const handleSubmit = async (data: Record<string, string>) => {
+    await createTransaction(
+      globalStore.selectedAccountId?.id,
       data.name,
       data.amount,
       globalStore.user?.id,
-      selectedOption === "Доход",
-      1
+      isIncome,
+      filtered.find((c) => c.categoryName === selectedCategory)?.id || 0
     );
-
     globalStore.reloadUpdateState();
     onClose();
   };
@@ -63,7 +73,9 @@ export const TransactionForm: React.FC<Props> = ({
       nameModal={transaction ? "Изменение транзакции" : "Добавление транзакции"}
     >
       <Form
-        onSubmit={(data) => handleSumbitTransaction(data)}
+        onSubmit={(data) => {
+          handleSubmit(data);
+        }}
         padding={isMobile ? "16px 0px 100px 0px" : "16px 0px 0px 0px"}
       >
         <ValidationInput
@@ -71,48 +83,43 @@ export const TransactionForm: React.FC<Props> = ({
           value={nameTransaction}
           onChange={setNameTransaction}
           typeValidation="required"
-          label="Введите название операции"
-          required={true}
+          label="Название операции"
+          required
         />
         <ValidationInput
           id="amount"
-          value={nameTransaction}
-          onChange={setNameTransaction}
+          value={amount}
+          onChange={setAmount}
           typeValidation="number"
           label="Сумма операции"
-          required={true}
+          required
         />
-        <Row padding="16px 0px 0px 0px">
+
+        <Row padding="6px 0px">
           <ComboBox
-            options={options}
-            value={selectedOption}
-            onChange={setSelectedOption}
+            options={["Доход", "Расход"]}
+            value={isIncome ? "Доход" : "Расход"}
+            onChange={(v) => setIsIncome(v === "Доход")}
             placeholder=""
-            label="Тип операция"
+            label="Тип операции"
           />
         </Row>
 
-        <Row padding="0px 0px 0px 0px">
+        <Row padding="6px 0px">
           <ComboBox
-            options={
-              selectedOption === "Доход" ? optionsCategoryE : optionsCategoryD
-            }
-            value={
-              selectedOption === "Доход" ? selectedOptionE : selectedOptionD
-            }
-            onChange={
-              selectedOption === "Доход"
-                ? setSelectedOptionE
-                : setSelectedOptionD
-            }
+            options={filtered.map((c) => c.categoryName)}
+            value={selectedCategory}
+            onChange={setSelectedCategory}
             placeholder=""
-            label="Выберите категорию"
+            label="Категория"
           />
         </Row>
 
         <StickySection>
           <Row padding="16px 0px">
-            <Button type="submit">Создать</Button>
+            <Button type="submit">
+              {transaction ? "Сохранить" : "Создать"}
+            </Button>
           </Row>
         </StickySection>
       </Form>

@@ -31,11 +31,26 @@
     position: fixed;
     bottom: 0;
     left: 0;
-    width: 100%;
+    min-width: 100%;
     border-radius: 12px 12px 0 0; /* Скругляем только верхние углы */
     box-sizing: border-box;
     min-height: 320px;
   }
+}
+
+/* Все дочерние элементы кроме последнего (вашей StickySection) — делают flex:1 и скроллятся */
+.modal > *:not(:last-child) {
+  flex: 1 1 auto;
+  overflow-y: auto;
+}
+
+/* Последний прямой ребёнок (.StickySection) остаётся «прилипающим» и не обрезается */
+.modal > *:last-child {
+  flex-shrink: 0;
+  position: sticky;
+  bottom: 0;
+  z-index: 1;
+  background: var(--background-color); /* тот же фон, что у модалки */
 }
 
 /* Кнопка закрытия */
@@ -52,4 +67,8 @@
   display: flex;
   width: 100%;
   justify-content: space-between;
+}
+
+.name-modal > h1 h2 h3 {
+  width: 80%;
 }

@@ -31,12 +31,11 @@ export const OperationItem: React.FC<OperationProps> = ({
       (e) => e.id === category_id
     )[0];
   };
-  
+  const categoryForTransaction = getNameCategory(category_id);
+  const nameCategory = categoryForTransaction?.categoryName || "Нет категории";
+  const categoryColor = categoryForTransaction?.color || "gray";
 
-  const nameCategory =
-    getNameCategory(category_id)?.category_name || "Нет категории";
-
-  const { isMobile } = useDevice(); 
+  const { isMobile } = useDevice();
 
   const formatBalance = (value: string | number, currency?: string) => {
     const amount = Number(value) || 0;
@@ -52,7 +51,6 @@ export const OperationItem: React.FC<OperationProps> = ({
 
   return (
     <Row tPadding="20px">
-      
       <section className={`${styles.operationItem}`}>
         {is_income ? (
           <MdAttachMoney
@@ -68,27 +66,44 @@ export const OperationItem: React.FC<OperationProps> = ({
 
         <article className={`${styles.itemIconName}`}>
           <div>
-            <p style={{ fontWeight: 600, paddingBottom: "5px" }}>{!transaction_name ? "Безымянная транзакция" : transaction_name}</p>
+            <p style={{ fontWeight: 600, paddingBottom: "5px" }}>
+              {!transaction_name ? "Безымянная транзакция" : transaction_name}
+            </p>
             <p
               className={`${styles.descriptionText}`}
               style={{ fontSize: "14px" }}
             >
-              {
-                !isMobile ? (
-                  <p>{is_income ? "Доход" : "Трата"} по категории: {nameCategory}</p>
-                ) : (
-                  <p>{is_income ? "Доход" : "Трата"}: {nameCategory}</p>
-                )
-              }
+              {!isMobile ? (
+                <p>
+                  {is_income ? "Доход" : "Трата"} по категории:{" "}
+                  <span
+                    style={{
+                      fontWeight: 700,
+                      color: categoryColor, // здесь ваше значение цвета, например color из пропсов
+                    }}
+                  >
+                    {nameCategory}
+                  </span>
+                </p>
+              ) : (
+                <p>
+                  {is_income ? "Доход" : "Трата"}:{" "}
+                  <span
+                    style={{
+                      fontWeight: 700,
+                      color: categoryColor,
+                    }}
+                  >
+                    {nameCategory}
+                  </span>
+                </p>
+              )}
             </p>
           </div>
 
           <p style={{ fontWeight: 600, whiteSpace: "nowrap" }}>
             {is_income ? "+ " : ""}
-            {
-              formatBalance(amount, globalStore.selectedAccountId?.currency)
-            }
- 
+            {formatBalance(amount, globalStore.selectedAccountId?.currency)}
           </p>
         </article>
       </section>

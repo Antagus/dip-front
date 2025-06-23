@@ -73,10 +73,12 @@ export const AccountCard: React.FC<AccountCardProps> = observer(
         </div>
 
         <CgTrashEmpty
-          onClick={() => setVisibleWarning(true)}
-          className={`${styles.iconDelete}`}
+          onClick={(e) => {
+            e.stopPropagation();
+            setVisibleWarning(true);
+          }}
+          className={styles.iconDelete}
         />
-
         <Modal
           nameModal="Вы действительно хотите удалить счет?"
           isOpen={visibleWarning}
@@ -114,7 +116,7 @@ export const AccountCard: React.FC<AccountCardProps> = observer(
               <Button onClick={handleDeleteAccount}>Подвердить</Button>
             </Row>
             <Row padding="0px 0px 16px 0px">
-              <Button variant="filled" onClick={handleDeleteAccount}>
+              <Button variant="filled" onClick={() => setVisibleWarning(false)}>
                 Отменить
               </Button>
             </Row>

@@ -1,15 +1,11 @@
-import React, { useMemo, useState } from 'react';
-import { Block } from 'shared/ui';
-import styled from 'styled-components';
+import React, { useMemo, useState } from "react";
+import { globalStore } from "shared/store/globalStore";
+import { Block, Button } from "shared/ui";
+import { CategorySummary } from "shared/utils";
+import styled from "styled-components";
 
 // --- Types ---
-export type OperationType = 'income' | 'expense';
-export interface Operation {
-  id: string;
-  type: OperationType;
-  category: string;
-  amount: number;
-}
+export type OperationType = "Доход" | "Расход";
 
 interface CategoryData {
   category: string;
@@ -25,8 +21,8 @@ const generateColor = (index: number, total: number) => {
 
 // --- Styled Components ---
 const Card = styled(Block)<{ darkMode: boolean }>`
-  background-color: ${p => (p.darkMode ? '#1e1e1e' : '#fff')};
-  color: ${p => (p.darkMode ? '#f0f0f0' : '#333')};
+  background-color: ${(p) => (p.darkMode ? "#1e1e1e" : "#fff")};
+  color: ${(p) => (p.darkMode ? "#f0f0f0" : "#333")};
   border-radius: 12px;
   padding: 16px;
   width: 340px;
@@ -51,18 +47,9 @@ const Toggles = styled.div`
 `;
 
 const ToggleButton = styled.button<{ active: boolean; darkMode: boolean }>`
-  background-color: ${p =>
-    p.active
-      ? '#427ba4'
-      : p.darkMode
-      ? '#333'
-      : '#eee'};
-  color: ${p =>
-    p.active
-      ? '#fff'
-      : p.darkMode
-      ? '#ccc'
-      : '#333'};
+  background-color: ${(p) =>
+    p.active ? "#427ba4" : p.darkMode ? "#333" : "#eee"};
+  color: ${(p) => (p.active ? "#fff" : p.darkMode ? "#ccc" : "#333")};
   border: none;
   border-radius: 4px;
   padding: 8px 12px;
@@ -86,14 +73,14 @@ const ChartBar = styled.div<{ darkMode: boolean }>`
   border-radius: 6px;
   overflow: hidden;
   margin-bottom: 16px;
-  background-color: ${p => (p.darkMode ? '#333' : '#f2f2f2')};
+  background-color: ${(p) => (p.darkMode ? "#333" : "#f2f2f2")};
 `;
 
 const ChartSegment = styled.div<{ width: number; color: string }>`
-  width: ${p => p.width}%;
+  width: ${(p) => p.width}%;
   flex-shrink: 0;
   height: 20px;
-  background-color: ${p => p.color};
+  background-color: ${(p) => p.color};
 `;
 
 const LegendList = styled.ul`
@@ -118,7 +105,7 @@ const LegendLeft = styled.div`
 const ColorDot = styled.span<{ color: string }>`
   width: 14px;
   height: 14px;
-  background-color: ${p => p.color};
+  background-color: ${(p) => p.color};
   border-radius: 50%;
   display: inline-block;
   margin-right: 8px;
@@ -128,53 +115,62 @@ const Amount = styled.span``;
 
 // --- Main Component ---
 interface BudgetAnalysisProps {
-  operations: Operation[];
+  operations: CategorySummary[];
   initialType?: OperationType;
   darkMode?: boolean;
 }
 
 export const BudgetAnalysis: React.FC<BudgetAnalysisProps> = ({
   operations,
-  initialType = 'expense',
+  initialType = "Расход",
   darkMode = false,
 }) => {
   const [type, setType] = useState<OperationType>(initialType);
 
   const data: CategoryData[] = useMemo(() => {
-    const filtered = operations.filter(op => op.type === type);
+    // отфильтровали по выбранному типу
+    const filtered = operations.filter((op) => op.type === type);
+
+    // сгруппировали и подсчитали total
     const totals = filtered.reduce<Record<string, number>>((acc, op) => {
       acc[op.category] = (acc[op.category] || 0) + op.amount;
       return acc;
     }, {});
+
     const entries = Object.entries(totals);
-    return entries.map(([category, total], idx) => ({
-      category,
-      total,
-      color: generateColor(idx, entries.length),
-    }));
+
+    return entries.map(([category, total], idx) => {
+      const opWithColor = filtered.find(
+        (op) => op.category === category && op.color != null
+      );
+      const color = opWithColor?.color ?? generateColor(idx, entries.length);
+
+      return { category, total, color };
+    });
   }, [operations, type]);
 
   const grandTotal = data.reduce((sum, d) => sum + d.total, 0);
 
   return (
-    <Block padding='16px'>
+    <Block padding="16px">
       <Header>
         <Title>Бюджет</Title>
+
         <Toggles>
-          <ToggleButton
-            active={type === 'income'}
-            darkMode={darkMode}
-            onClick={() => setType('income')}
+          <Button
+            variant={type === "Доход" ? "usual" : "filled"}
+            onClick={() => setType("Доход")}
+            style={{ padding: "6px 20px 6px 20px" }}
           >
             Доход
-          </ToggleButton>
-          <ToggleButton
-            active={type === 'expense'}
-            darkMode={darkMode}
-            onClick={() => setType('expense')}
+          </Button>
+          <Button
+            variant={type !== "Доход" ? "usual" : "filled"}
+            onClick={() => setType("Расход")}
+            style={{ padding: "6px 20px 6px 20px" }}
           >
             Расход
-          </ToggleButton>
+          </Button>
         </Toggles>
       </Header>
 
@@ -182,7 +178,7 @@ export const BudgetAnalysis: React.FC<BudgetAnalysisProps> = ({
         {data.length > 0 ? (
           <>
             <h4>Анализ</h4>
-            <>{type === 'expense' ? 'Расход' : 'Доход'}</>
+            <>{type === "Расход" ? "Расход" : "Доход"}</>
           </>
         ) : (
           <>Нет данных для отображения</>
@@ -190,7 +186,7 @@ export const BudgetAnalysis: React.FC<BudgetAnalysisProps> = ({
       </AnalysisLabel>
 
       <ChartBar darkMode={darkMode}>
-        {data.map(d => (
+        {data.map((d) => (
           <ChartSegment
             key={d.category}
             width={grandTotal > 0 ? (d.total / grandTotal) * 100 : 0}
@@ -201,13 +197,16 @@ export const BudgetAnalysis: React.FC<BudgetAnalysisProps> = ({
 
       {data.length > 0 && (
         <LegendList>
-          {data.map(d => (
+          {data.map((d) => (
             <LegendItem key={d.category}>
               <LegendLeft>
                 <ColorDot color={d.color} />
                 <span>{d.category}</span>
               </LegendLeft>
-              <Amount>{d.total.toLocaleString('ru-RU')} Р</Amount>
+              <Amount>
+                {d.total.toLocaleString("ru-RU")}{" "}
+                {globalStore.selectedAccountId?.currency}
+              </Amount>
             </LegendItem>
           ))}
         </LegendList>

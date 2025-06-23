@@ -19,7 +19,7 @@ export const ThemeSwitch = observer(() => {
         background: "#427ba4",
       }}
     >
-      {theme}
+      {theme == "light" ? "День" : "Ночь"}
     </div>
   );
 });

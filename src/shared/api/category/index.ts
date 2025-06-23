@@ -37,7 +37,9 @@ export const getCategoryById = async (
 
 export const createCategory = async (
   user: UserProps | null,
-  data: { name: string; image: string }
+  name: string,
+  color: string,
+  categoryType: string
 ): Promise<CategoryProps | undefined> => {
   if (user) {
     try {
@@ -45,8 +47,10 @@ export const createCategory = async (
         getPathAPI("/categories"),
         {
           userId: user.id,
-          categoryName: data.name,
-          image: data.image,
+          categoryName: name,
+          image: "",
+          color: color,
+          categoryType: categoryType,
         }
       );
       return response.data;

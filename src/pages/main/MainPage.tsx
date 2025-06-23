@@ -1,26 +1,64 @@
+import axios from "axios";
 import { AccountList } from "features/AccountList/ui";
-import BudgetAnalysis, { Operation } from "features/BudgetAnalysis";
+import BudgetAnalysis from "features/BudgetAnalysis";
 import CalendarWithEvents from "features/Calendar";
 import { CategoryWidget } from "features/Category";
+import FinanceAnalysis from "features/FinanceAnalysis/FinanceAnalysis";
 import { NavBar } from "features/NavBar";
 import { TransactionBlock } from "features/Transaction/ui/TransactionBlock";
 import { observer } from "mobx-react-lite";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { getUserCategories } from "shared/api/category";
 import { useDevice } from "shared/hooks";
 import { globalStore } from "shared/store/globalStore";
-import { TabActive } from "shared/store/type";
+import { TabActive, Transaction } from "shared/store/type";
 import { Block, Container, ResponsiveGrid, Row } from "shared/ui";
+import { PhoneNavBar } from "shared/ui/PhoneNavBar.tsx/PhoneNavBar";
+import { getMonthlyCategorySummarySync } from "shared/utils";
 
 export const MainPage = observer(() => {
   const navigation = useNavigate();
   const { isAuthenticated } = globalStore;
   const { isMobile } = useDevice();
 
+  const [transaction, setTransaction] = useState<Transaction[]>([]);
+
   if (!isAuthenticated) {
     navigation("/");
     return <></>;
   }
+
+  const handleLoadAllData = async () => {
+    const categories = await getUserCategories(globalStore.user?.id);
+
+    if (categories) {
+      globalStore.setAllCategories(categories);
+    }
+  };
+
+  const handleLoadAllTransaction = async () => {
+    if (globalStore.user && globalStore.selectedAccountId) {
+      try {
+        const response = await axios.get(
+          `http://localhost:3222/transactions/account/${globalStore.selectedAccountId.id}`
+        );
+        setTransaction(response?.data);
+      } catch (err: any) {
+        console.log(err);
+      }
+    }
+  };
+
+  useEffect(() => {
+    handleLoadAllData();
+  }, [globalStore.updateState, globalStore.user]);
+
+  useEffect(() => {
+    if (globalStore.selectedAccountId?.id) {
+      handleLoadAllTransaction();
+    }
+  }, [globalStore.selectedAccountId?.id]);
 
   const getMainContent = (tabActive: TabActive) => {
     switch (tabActive) {
@@ -28,16 +66,27 @@ export const MainPage = observer(() => {
         return <TransactionBlock />;
         break;
       case "Анализ":
-        return <Block>Анализ</Block>;
+        return (
+          <FinanceAnalysis accountId={globalStore.selectedAccountId?.id} />
+        );
         break;
-      case "Календарь":
-        return <Block>Календарь</Block>;
-        break;
+      // case "Календарь":
+      //   return <Block>Календарь</Block>;
+      //   break;
       case "Категории":
         return <CategoryWidget />;
         break;
       default:
-        return <BudgetAnalysis operations={sampleOperations} />;
+        return (
+          <BudgetAnalysis
+            operations={getMonthlyCategorySummarySync(
+              2025,
+              6,
+              transaction,
+              globalStore.allUserCategories
+            )}
+          />
+        );
         break;
     }
   };
@@ -50,33 +99,10 @@ export const MainPage = observer(() => {
     );
   };
 
-  const sampleOperations: Operation[] = [
-    { id: "1", type: "expense", category: "Зарплаты", amount: 143280 },
-    {
-      id: "2",
-      type: "expense",
-      category: "Подписки на ресурсы",
-      amount: 81440,
-    },
-    { id: "3", type: "expense", category: "Сырье", amount: 23430 },
-    { id: "4", type: "expense", category: "Перевозка грузов", amount: 22440 },
-    {
-      id: "5",
-      type: "expense",
-      category: "Аренда помещений",
-      amount: 51999.99,
-    },
-    { id: "6", type: "expense", category: "Остальное", amount: 32000 },
-    { id: "7", type: "income", category: "Продажи", amount: 250000 },
-    { id: "8", type: "income", category: "Инвестиции", amount: 50000 },
-    { id: "9", type: "income", category: "Возврат налогов", amount: 12000 },
-    { id: "10", type: "income", category: "Прочие поступления", amount: 8000 },
-  ];
   return (
     <>
-      <NavBar />
-
-      <Container style={{ marginTop: "60px" }}>
+      {!isMobile ? <NavBar /> : <PhoneNavBar />}
+      <Container style={{ marginTop: isMobile ? "0px" : "60px" }}>
         <ResponsiveGrid
           leftColumn={<AccountBlock />}
           middleColumn={getMainContent(globalStore.menuTotalTab)}
@@ -89,8 +115,15 @@ export const MainPage = observer(() => {
                   gap: "16px",
                 }}
               >
-                <BudgetAnalysis operations={sampleOperations} />
-                <CalendarWithEvents events={[]} />
+                <BudgetAnalysis
+                  operations={getMonthlyCategorySummarySync(
+                    2025,
+                    6,
+                    transaction,
+                    globalStore.allUserCategories
+                  )}
+                />
+                <CalendarWithEvents />
               </div>
             ) : (
               <TransactionBlock />
