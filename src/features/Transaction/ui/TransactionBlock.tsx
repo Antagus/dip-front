@@ -7,6 +7,7 @@ import { Transaction } from "shared/store/type";
 import { Block, Button, Row, StickySection } from "shared/ui";
 import { IoIosAdd } from "react-icons/io";
 import { TransactionForm } from "./TransactionForm";
+import { getPathAPI } from "shared/api/constant";
 
 export const TransactionBlock = observer(() => {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
@@ -20,7 +21,9 @@ export const TransactionBlock = observer(() => {
     if (globalStore.user && globalStore.selectedAccountId) {
       try {
         const response = await axios.get(
-          `http://localhost:3222/transactions/account/${globalStore.selectedAccountId.id}`
+          getPathAPI(
+            `/transactions/account/${globalStore.selectedAccountId.id}`
+          )
         );
         setTransactions(response?.data);
       } catch (err: any) {
@@ -100,7 +103,6 @@ export const TransactionBlock = observer(() => {
         onClose={() => setVisibleModal(false)}
         isOpen={visibleModal}
       />
-
     </Block>
   );
 });

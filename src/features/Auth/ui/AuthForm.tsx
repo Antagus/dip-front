@@ -15,6 +15,7 @@ import {
   StickySection,
   ValidationInput,
 } from "shared/ui";
+import { getPathAPI } from "shared/api/constant";
 
 type AuthParams = {
   setAuth: (param: boolean) => void;
@@ -30,13 +31,10 @@ export const AuthForm: React.FC<AuthParams> = observer(({ setAuth }) => {
 
   const handleSubmit = async (data: Record<string, string>) => {
     try {
-      const response = await axios.post(
-        "http://localhost:3222/users/auth/login",
-        {
-          email: data.email,
-          password: data.password,
-        }
-      );
+      const response = await axios.post(getPathAPI("/users/auth/login"), {
+        email: data.email,
+        password: data.password,
+      });
       const userData = response.data;
       console.log("User Data", userData);
 

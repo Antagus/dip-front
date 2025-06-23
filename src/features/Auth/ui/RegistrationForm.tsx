@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useState } from "react";
+import { getPathAPI } from "shared/api/constant";
 import { useDevice } from "shared/hooks";
 import {
   AdaptiveBlock,
@@ -27,7 +28,7 @@ export const RegistrationForm: React.FC<AuthParams> = ({ setAuth }) => {
 
   const handleSubmit = async (data: Record<string, string>) => {
     try {
-      await axios.post("http://localhost:3222/users/", {
+      await axios.post(getPathAPI("/users/"), {
         firstName: data.name,
         lastName: data.secondName,
         middleName: "",

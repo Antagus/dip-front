@@ -10,6 +10,7 @@ import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getUserCategories } from "shared/api/category";
+import { getPathAPI } from "shared/api/constant";
 import { useDevice } from "shared/hooks";
 import { globalStore } from "shared/store/globalStore";
 import { TabActive, Transaction } from "shared/store/type";
@@ -41,7 +42,9 @@ export const MainPage = observer(() => {
     if (globalStore.user && globalStore.selectedAccountId) {
       try {
         const response = await axios.get(
-          `http://localhost:3222/transactions/account/${globalStore.selectedAccountId.id}`
+          getPathAPI(
+            `/transactions/account/${globalStore.selectedAccountId.id}`
+          )
         );
         setTransaction(response?.data);
       } catch (err: any) {

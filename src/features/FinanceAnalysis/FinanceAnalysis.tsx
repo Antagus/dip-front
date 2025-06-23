@@ -20,6 +20,7 @@ import {
 } from "recharts";
 import { Block, Row } from "shared/ui";
 import { globalStore } from "shared/store/globalStore";
+import { getPathAPI } from "shared/api/constant";
 
 moment.locale("ru");
 
@@ -95,9 +96,7 @@ export const FinanceAnalysis: React.FC<FinanceAnalysisProps> = ({
     if (!accountId) return;
     setLoading(true);
     axios
-      .get<Transaction[]>(
-        `http://localhost:3222/transactions/account/${accountId}`
-      )
+      .get<Transaction[]>(getPathAPI(`/transactions/account/${accountId}`))
       .then((resp) => setTransactions(resp.data))
       .catch((e) => console.error("Ошибка загрузки транзакций", e))
       .finally(() => setLoading(false));
