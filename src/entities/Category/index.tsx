@@ -19,9 +19,10 @@ import { useDevice } from "shared/hooks";
 type Props = { category: Category };
 
 export const CategoryItem: React.FC<Props> = ({ category }) => {
-  const handleDeleteCategory = () => {
-    deleteCategory(category.id);
+  const handleDeleteCategory = async () => {
+    await deleteCategory(category.id);
     globalStore.reloadUpdateState();
+    setVisibleWarning(false);
   };
 
   const { isMobile } = useDevice();

@@ -1,6 +1,7 @@
 import React, { useMemo } from "react";
 import { Transaction } from "shared/store/type";
 import { OperationItem } from "..";
+import { globalStore } from "shared/store/globalStore";
 
 interface OperationListProps {
   transactions: Transaction[];
@@ -108,7 +109,8 @@ export const OperationList: React.FC<OperationListProps> = ({
               }}
             >
               {grp.total >= 0 ? "+" : "-"}{" "}
-              {Math.abs(grp.total).toLocaleString("ru-RU")} Р
+              {Math.abs(grp.total).toLocaleString("ru-RU")}{" "}
+              {globalStore.selectedAccountId?.currency}
             </span>
           </article>
 

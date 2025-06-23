@@ -38,9 +38,13 @@ export const CategoryForm: React.FC<Props> = ({ onClose, isOpen }) => {
   const [color, setColor] = useState<string>(presetColors[0]);
 
   const handleSubmit = async (data: Record<string, string>) => {
-    createCategory(globalStore.user, data.name, color, categoryType);
-    globalStore.reloadUpdateState();
-    onClose();
+    try {
+      await createCategory(globalStore.user, data.name, color, categoryType);
+      globalStore.reloadUpdateState();
+      onClose();
+    } catch (error) {
+      console.error("Ошибка при создании категории:", error);
+    }
   };
 
   return (

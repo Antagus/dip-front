@@ -15,9 +15,15 @@ type Props = {
   onClose: () => void;
   isOpen: boolean;
   dateEvent?: Date;
+  setUpdated: () => void;
 };
 
-export const NoteForm: React.FC<Props> = ({ onClose, isOpen, dateEvent }) => {
+export const NoteForm: React.FC<Props> = ({
+  onClose,
+  isOpen,
+  dateEvent,
+  setUpdated,
+}) => {
   const { isMobile } = useDevice();
   const [titleNote, setTitleNote] = useState("");
   const [descriptionNote, setDescriptionNote] = useState("");
@@ -33,15 +39,16 @@ export const NoteForm: React.FC<Props> = ({ onClose, isOpen, dateEvent }) => {
       0
     );
   }
-  const handleCreateNote = (data: Record<string, string>) => {
+  const handleCreateNote = async (data: Record<string, string>) => {
     if (dateEvent) {
-      console.log("DATE EVENT", dateEvent);
-      createNote(
+      await createNote(
         globalStore.user,
         data.name,
         data.description,
         toLocalNoon(dateEvent)
       );
+      setUpdated();
+      onClose();
     }
   };
 

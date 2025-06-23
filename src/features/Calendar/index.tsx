@@ -158,6 +158,8 @@ export const CalendarWithEvents: React.FC = () => {
   const [notes, setNotes] = useState<Note[]>([]);
   const userId = globalStore.user?.id ?? null;
 
+  const [updateStatus, setUpdateStatus] = useState(false);
+
   // подтягиваем заметки при старте или при смене userId
   useEffect(() => {
     if (userId) {
@@ -165,7 +167,7 @@ export const CalendarWithEvents: React.FC = () => {
         if (data) setNotes(data);
       });
     }
-  }, [userId]);
+  }, [userId, updateStatus, setUpdateStatus]);
 
   // сетка дней месяца
   const monthGrid = useMemo(
@@ -281,6 +283,7 @@ export const CalendarWithEvents: React.FC = () => {
       <NoteForm
         isOpen={showAddNote}
         dateEvent={selectedDate}
+        setUpdated={() => setUpdateStatus(!updateStatus)}
         onClose={() => setShowAddNote(false)}
       />
     </>
